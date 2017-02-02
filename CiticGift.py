@@ -2,7 +2,7 @@
 
 
 import urllib,urllib2,re,json
-import SockCookie
+import SockCookie,time
 
 
 ###
@@ -18,7 +18,6 @@ month = "01"
 retry = 10
 
 mheader = {
-    'Host': 'zx.51cnb.xin',
     "Connection": "keep-alive",
     'Accept': "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Accept-Language": "zh-CN,zh;q=0.8,en-us;q=0.6,en;q=0.5;q=0.4",
@@ -34,7 +33,23 @@ def updateCookie():
         mheader['Cookie']="PHPSESSID="+cookie
         return True
     return False
-		
+
+
+def getBeijinTime(retime):
+    print u"**********开始对时***********"
+    now = get("http://www.114time.com/api/time.php")
+    dt = (float(now)+500)/1000
+    now = time.localtime(dt)
+    print "NOW TIME:"+time.strftime('%Y-%m-%d %H:%M:%S', now)
+    sleeptime =  time.mktime(time.strptime(retime, '%Y-%m-%d %H:%M:%S'))-dt
+    if(sleeptime>0):
+        time.sleep(sleeptime)
+    now = get("http://www.114time.com/api/time.php")
+    dt = (float(now) + 200) / 1000
+    now = time.localtime(dt)
+    print "NOW TIME:" + time.strftime('%Y-%m-%d %H:%M:%S', now)
+    return True
+
 def get(url):
     request = urllib2.Request(url, headers=mheader)
     content = urllib2.urlopen(request,timeout=10)
@@ -79,9 +94,11 @@ def ExchangeGift():
                 print result['msg']
                 if(result['code']==0):
                     break
+            time.sleep(0.5)
         print "*******************"
-if __name__ == '__main__':
 
-    if(updateCookie()):
+if __name__ == '__main__':
+    print u"******中信印花抢兑*******"
+    if(updateCookie() and getBeijinTime("2017-01-15 15:09:59")):
         ExchangeGift()
     print "finish"

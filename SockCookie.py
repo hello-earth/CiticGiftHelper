@@ -47,7 +47,7 @@ class layer():
 
 def getCookie(domain):
     dip = getDip(domain)
-    sip = "192.168.1.104"
+    sip = "192.168.1.105"
     s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_IP)
     s.bind((sip, 0))
     s.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
